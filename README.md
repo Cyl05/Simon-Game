@@ -10,6 +10,8 @@ Rules:
 5. Input the correct order and **submit** it by pressing the **Enter key** again.
 6. **Restart** the game by pressing the **Enter key** again.
 
+**Play the game here:** https://cyl05.github.io/Simon-Game/
+
 ## Gallery
 [![image.png](https://i.postimg.cc/j5MF1V88/image.png)](https://postimg.cc/phnC9SM8)
 [![image.png](https://i.postimg.cc/W1tm1dkc/image.png)](https://postimg.cc/68J4H5cM)
