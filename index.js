@@ -26,12 +26,14 @@ function animateButton(btn) {
     audio.play();
 }
 
+// added animtion and logic for submit button (only on mobile)
 function submitLogic() {
     $(".submit").css("opacity", "0.5");
     setTimeout(function() {
         $(".submit").css("opacity", "1");
     }, 100);
 
+    // game start and restart logic
     if (!started && !gameover) {
         $("h1").text("Round " + round);
         started = true;
@@ -45,6 +47,8 @@ function submitLogic() {
         $(".button").removeAttr("style");
         $(".submit").text("Submit");
     }
+
+    // submission logic
     else if (JSON.stringify(playPattern) === JSON.stringify(genPattern) && playerTurn) {
         round++;
         counter = 0;
@@ -56,7 +60,6 @@ function submitLogic() {
 // generates a pattern when game is started or after successful round
 function generatePattern() {
     playerTurn = false;
-    console.log(round);
     $("h1").text(`Round ${round}`);
     $(".button").attr("disabled", "true"); // disabled buttons while the sequence is shown
     let randomNumber = Math.floor(Math.random() * 4);
@@ -85,7 +88,6 @@ function checkPlayer() {
         let btn = $(this).attr("id");
         animateButton(btn);
         if (playerTurn) playPattern.push(btn);
-        console.log(playPattern);
         
         // checks if current button press matches with correct array
         if (btn == genPattern[counter] && counter < genPattern.length) {
@@ -103,7 +105,6 @@ function checkPlayer() {
         else if (btn != genPattern[counter] && counter < genPattern.length) {
             let wrong = new Audio("./sounds/wrong.mp3");
             wrong.play();
-            console.log(btn, genPattern[counter], counter);
             gameover = true;
             $("h1").text("Game Over! Enter to restart");
             $(this).css("backgroundColor", "gray");
