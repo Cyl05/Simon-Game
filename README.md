@@ -1,7 +1,7 @@
 # Simon Game
 
 Recreation of the classic simon game. Memorise the sequence of buttons shown by the computer to get as far as you can! 
-(You can also use the arrow keys to click the buttons 😉)
+(You can also use the arrow keys to click the buttons 😉) <br>
 Rules: 
 1. Round 1 starts of with one button click and increases by one every round.
 2. Memorise the pattern of buttons shown and input your sequence in the same order.
