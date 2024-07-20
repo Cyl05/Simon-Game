@@ -9,9 +9,11 @@ round: variable to signify which round the player is currently in
 
 let btn_colors = ["green", "red", "yellow", "blue"];
 let genPattern = [];
+let playPattern = [];
 let started = false;
 let gameover = false;
 let playerTurn = false;
+let submitted = false;
 let round = 1;
 
 // button animation when clicked
@@ -24,12 +26,39 @@ function animateButton(btn) {
     audio.play();
 }
 
+function submitLogic() {
+    $(".submit").css("opacity", "0.5");
+    setTimeout(function() {
+        $(".submit").css("opacity", "1");
+    }, 100);
+
+    if (!started && !gameover) {
+        $("h1").text("Round " + round);
+        started = true;
+        generatePattern();
+        $(".submit").text("Submit");
+    }
+    else if (gameover) {
+        started = true;
+        gameover = false;
+        generatePattern();
+        $(".button").removeAttr("style");
+        $(".submit").text("Submit");
+    }
+    else if (JSON.stringify(playPattern) === JSON.stringify(genPattern) && playerTurn) {
+        round++;
+        counter = 0;
+        started = false;
+        playPattern = [];
+    }
+}
+
 // generates a pattern when game is started or after successful round
 function generatePattern() {
     playerTurn = false;
     console.log(round);
     $("h1").text(`Round ${round}`);
-    $("button").attr("disabled", "true"); // disabled buttons while the sequence is shown
+    $(".button").attr("disabled", "true"); // disabled buttons while the sequence is shown
     let randomNumber = Math.floor(Math.random() * 4);
     genPattern.push(btn_colors[randomNumber]);
 
@@ -42,7 +71,7 @@ function generatePattern() {
 
     // re-enabling of the buttons
     setTimeout(function() {
-        $("button").removeAttr("disabled");
+        $(".button").removeAttr("disabled");
         checkPlayer();
     }, 500 * (genPattern.length + 1));
 }
@@ -51,10 +80,12 @@ function generatePattern() {
 function checkPlayer() {
     let counter = 0; // used to iterate the correct pattern array
     playerTurn = true;
-    $("button").off("click"); // removes old listener
-    $("button").on("click", function() {
+    $(".button").off("click"); // removes old listener
+    $(".button").on("click", function() {
         let btn = $(this).attr("id");
         animateButton(btn);
+        if (playerTurn) playPattern.push(btn);
+        console.log(playPattern);
         
         // checks if current button press matches with correct array
         if (btn == genPattern[counter] && counter < genPattern.length) {
@@ -64,6 +95,7 @@ function checkPlayer() {
                 round++;
                 counter = 0;
                 started = false;
+                playPattern = [];
             }
         }
 
@@ -76,16 +108,18 @@ function checkPlayer() {
             $("h1").text("Game Over! Enter to restart");
             $(this).css("backgroundColor", "gray");
             $("#" + genPattern[counter]).css("backgroundColor", "lightgreen");
+            $(".submit").text("Restart");
             started = false;
             counter = 0;
             genPattern = [];
+            playPattern = [];
             round = 1;
         }
     })
 }
 
 // rudimentary button event listener
-$("button").on("click", function() {
+$(".button").on("click", function() {
     let btn = $(this).attr("id");
     animateButton(btn);
 });
@@ -93,7 +127,6 @@ $("button").on("click", function() {
 // start and restart game logic
 // arrow key presses for clicking buttons
 $(document).on("keydown", function(event) {
-    console.log(event.key);
     switch (event.key) {
         case "Enter":
             if (!started && !gameover) {
@@ -105,7 +138,7 @@ $(document).on("keydown", function(event) {
                 started = true;
                 gameover = false;
                 generatePattern();
-                $("button").removeAttr("style");
+                $(".button").removeAttr("style");
             }
             break;
         case "ArrowUp":
@@ -130,3 +163,5 @@ $(document).on("keydown", function(event) {
             }
     }
 });
+
+$(".submit").on("click", submitLogic);
